@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb"><title>MXX Messenger Ultimate</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#182033;--muted:#8993a5;--line:#e7ebf2;--accent:#147ef5;--accent2:#eaf3ff;--mine:#147ef5;--danger:#ff3b30;--shadow:0 20px 70px #17233d16}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,textarea{font:inherit}button{border:0;cursor:pointer}input,textarea{outline:0}body.dark{--bg:#0b0f17;--panel:#151b27;--text:#f3f6fc;--muted:#8f9bb0;--line:#293244;--accent:#0a84ff;--accent2:#1d304c;--mine:#0a84ff;--shadow:0 20px 70px #0008}
+#app{height:100dvh;min-height:100dvh;display:grid;place-items:center;padding:18px;overflow:hidden;overscroll-behavior:none}.shell{width:min(1320px,100%);height:min(880px,calc(100dvh - 36px));min-height:0;display:grid;grid-template-columns:350px 1fr;background:var(--panel);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.sidebar{min-width:0;border-right:1px solid var(--line);display:flex;flex-direction:column;background:color-mix(in srgb,var(--panel) 96%,var(--bg))}.top{height:70px;padding:12px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#0a84ff,#6558f5);display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;box-shadow:0 7px 18px #147ef522}.brand{font-weight:800;font-size:19px;flex:1}.iconbtn{width:38px;height:38px;border-radius:12px;background:transparent;color:var(--muted);font-size:20px;transition:.18s}.iconbtn:hover{background:var(--accent2);color:var(--accent)}
+.search{margin:12px 14px 8px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);background:var(--bg);border-radius:13px}.search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px #147ef51a}.search input{border:0;background:transparent;color:var(--text);width:100%;min-width:0}.tabs{display:flex;gap:4px;padding:0 12px 10px;overflow:auto}.tab{white-space:nowrap;background:transparent;color:var(--muted);padding:8px 11px;border-radius:10px;font-size:13px}.tab.active{background:var(--accent2);color:var(--accent);font-weight:700}.list{overflow:auto;overscroll-behavior:contain;flex:1;padding:2px 8px 10px}.item{position:relative;display:flex;align-items:center;gap:11px;padding:10px;border-radius:15px;cursor:pointer;min-width:0;transition:.15s}
+.item.selected{background:color-mix(in srgb,var(--accent2) 82%,transparent);outline:1px solid color-mix(in srgb,var(--accent) 55%,transparent)}
+.item.selected .avatar{box-shadow:0 0 0 3px var(--accent)}
+.selectionTop{display:flex;align-items:center;gap:8px;padding:8px 10px;height:64px;min-height:64px;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden}
+.selectionTop .selCount{font-size:20px;font-weight:800;min-width:34px;text-align:center}
+.selectionTop .selTitle{font-size:14px;color:var(--muted);margin-right:auto;white-space:nowrap}
+.selectionTop .selBtn{width:42px;height:42px;border-radius:50%;background:transparent;color:var(--text);font-size:24px;display:grid;place-items:center}
+.selectionTop .selBtn:hover{background:var(--accent2)}
+.selectionTop .selDelete{color:var(--danger)}
+@media(max-width:900px){.selectionTop{height:calc(58px + env(safe-area-inset-top));min-height:calc(58px + env(safe-area-inset-top));padding:calc(8px + env(safe-area-inset-top)) 10px 8px}.selectionTop .selBtn{width:40px;height:40px}}.item:hover,.item.active{background:var(--accent2)}.avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;color:#fff;font-weight:800;background:linear-gradient(135deg,#71aaff,#7466e8)}.avatar.small{width:38px;height:38px}.meta{min-width:0;flex:1}.name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.itemRight{margin-left:auto;min-width:34px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;align-self:stretch}.lasttime{font-size:10px;color:var(--muted);padding-top:2px;white-space:nowrap}.badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;display:grid;place-items:center}.empty{padding:30px 16px;text-align:center;color:var(--muted)}.profilebar{border-top:1px solid var(--line);padding:10px 12px;display:flex;align-items:center;gap:10px}.profilebar .meta{flex:1}
+.main{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-width:0;min-height:0;position:relative;overflow:hidden}.welcome{height:100%;display:grid;place-items:center;text-align:center;color:var(--muted);padding:30px}.welcome .hero{font-size:58px;margin-bottom:8px}.chathead{height:70px;min-height:70px;flex:0 0 70px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:10px 18px;gap:11px;background:color-mix(in srgb,var(--panel) 94%,var(--bg));backdrop-filter:blur(15px);z-index:2}.chathead .meta{flex:1}.messages{min-height:0;height:auto;overflow-y:auto;overflow-x:hidden;padding:20px 22px 24px;display:flex;flex-direction:column;gap:7px;overscroll-behavior:contain;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;touch-action:pan-y;background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 20%,transparent),transparent)}.bubble{position:relative;max-width:min(72%,560px);padding:9px 12px 7px;border-radius:17px;background:var(--bg);align-self:flex-start;overflow-wrap:anywhere;box-shadow:0 1px 1px #00000006}.bubble.mine{align-self:flex-end;background:var(--mine);color:#fff;border-bottom-right-radius:5px}.bubble:not(.mine){border-bottom-left-radius:5px}.bubble .sender{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:2px}.bubble.mine .sender{color:#dcecff}.bubble .time{font-size:9px;opacity:.62;text-align:right;margin-top:3px}.deleteMsg{display:none;position:absolute;right:5px;top:-25px;background:var(--panel);color:var(--danger);border:1px solid var(--line);padding:4px 7px;border-radius:8px;font-size:11px}.bubble:hover .deleteMsg{display:block}.composer{min-height:64px;flex:0 0 auto;display:flex;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--panel)}.composer input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:12px 14px;border-radius:21px}.send{background:var(--accent);color:#fff;padding:0 18px;border-radius:19px;font-weight:700}.send:disabled{opacity:.5}
+.auth{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:25px;padding:28px;box-shadow:var(--shadow)}.auth h1{margin:14px 0 5px}.muted{color:var(--muted)}.field{display:flex;flex-direction:column;gap:6px;margin:13px 0}.field input,.field textarea{padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:var(--bg);color:var(--text);resize:vertical}.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #147ef51a}.primary{background:var(--accent);color:#fff;padding:12px 16px;border-radius:13px;font-weight:700;width:100%;margin-top:8px}.link{background:none;color:var(--accent);padding:9px}.error{color:#d74a55;font-size:13px;white-space:pre-wrap;margin-top:10px}
+.overlay{position:fixed;inset:0;background:#09102066;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.overlay.show{display:flex}.modal{width:min(480px,100%);max-height:90dvh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}.modalrow{display:flex;justify-content:space-between;align-items:center;gap:10px}.modal h2{margin:0 0 12px}.actions{display:flex;gap:8px;margin-top:15px}.actions button{padding:10px 14px;border-radius:11px;background:var(--accent2);color:var(--accent);font-weight:700}.actions .solid{background:var(--accent);color:#fff}.drawer{position:fixed;inset:0;background:#09102066;z-index:15;display:none}.drawer.show{display:block}.drawerbox{height:100%;width:min(320px,88vw);background:var(--panel);padding:18px;box-shadow:var(--shadow)}.draweritem{display:flex;width:100%;padding:13px 12px;background:transparent;color:var(--text);text-align:left;border-radius:12px;gap:12px}.draweritem:hover{background:var(--accent2)}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#172033;color:#fff;padding:10px 15px;border-radius:13px;z-index:50;display:none;max-width:90%;text-align:center}.loading{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:60;color:var(--muted)}.spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 12px}@keyframes spin{to{transform:rotate(360deg)}}
+.mobileback{display:none}@media(max-width:700px){html,body{height:100%;overflow:hidden}#app{padding:0;height:100dvh;min-height:100dvh}.shell{width:100%;height:100dvh;min-height:0;max-height:100dvh;border-radius:0;border:0;grid-template-columns:1fr}.sidebar{border:0}.main{display:none}.shell.inchat .sidebar{display:none}.shell.inchat .main{display:flex}.mobileback{display:block}.chathead{height:62px;min-height:62px;flex-basis:62px;padding:8px 10px;position:relative}.messages{padding:14px 12px 18px;min-height:0;height:auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y}.bubble{max-width:86%}.top{padding-top:calc(10px + env(safe-area-inset-top));height:calc(64px + env(safe-area-inset-top))}.profilebar{padding-bottom:calc(10px + env(safe-area-inset-bottom))}.composer{padding-bottom:calc(9px + env(safe-area-inset-bottom));min-height:64px}}
+.list,.messages{scrollbar-width:thin}.list::-webkit-scrollbar,.messages::-webkit-scrollbar{width:6px}.list::-webkit-scrollbar-thumb,.messages::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted) 35%,transparent);border-radius:20px}
+
+/* ===== MOBILE / TELEGRAM-LIKE PHONE LAYOUT ===== */
+@media (max-width: 900px){
+  html,body{
+    width:100%;
+    height:100%;
+    height:100dvh;
+    margin:0;
+    overflow:hidden;
+    overscroll-behavior:none;
+    -webkit-text-size-adjust:100%;
+  }
+  body{background:var(--bg)}
+  #app{
+    width:100%;
+    height:100dvh;
+    min-height:100dvh;
+    padding:0;
+    margin:0;
+    display:block;
+    overflow:hidden;
+  }
+  .shell{
+    width:100%;
+    height:100dvh;
+    min-height:0;
+    max-height:none;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    display:grid;
+    grid-template-columns:1fr;
+    overflow:hidden;
+  }
+  .sidebar{
+    width:100%;
+    height:100dvh;
+    min-height:0;
+    border:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .main{
+    width:100%;
+    height:100dvh;
+    min-height:0;
+    display:none;
+    grid-template-rows:60px minmax(0,1fr) auto;
+    overflow:hidden;
+  }
+  .shell.inchat .sidebar{display:none}
+  .shell.inchat .main{display:grid}
+
+  /* Telegram-like top bar */
+  .top{
+    flex:0 0 auto;
+    height:calc(58px + env(safe-area-inset-top));
+    min-height:calc(58px + env(safe-area-inset-top));
+    padding:calc(8px + env(safe-area-inset-top)) 12px 8px;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{width:40px;height:40px;border-radius:13px}
+  .brand{font-size:19px}
+  .iconbtn{width:40px;height:40px;border-radius:50%}
+
+  .search{
+    flex:0 0 auto;
+    margin:9px 12px 7px;
+    height:42px;
+    border-radius:13px;
+  }
+  .tabs{
+    flex:0 0 auto;
+    display:flex;
+    gap:5px;
+    padding:2px 10px 8px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    white-space:nowrap;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-x;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;padding:8px 13px}
+
+  /* Only the list scrolls on the home screen */
+  .list{
+    min-height:0;
+    height:auto;
+    flex:1 1 auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+    padding:2px 8px 12px;
+  }
+  .item{
+    min-height:64px;
+    padding:9px 10px;
+    border-radius:14px;
+  }
+  .avatar{width:48px;height:48px}
+  .profilebar{
+    flex:0 0 auto;
+    min-height:58px;
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+    background:var(--panel);
+  }
+
+  /* Fixed chat header + fixed composer, only messages scroll */
+  .chathead{
+    width:100%;
+    height:60px;
+    min-height:60px;
+    flex:0 0 60px;
+    padding:6px 9px;
+    position:relative;
+    z-index:10;
+    background:color-mix(in srgb,var(--panel) 94%,var(--bg));
+    border-bottom:1px solid var(--line);
+  }
+  .mobileback{
+    display:grid!important;
+    place-items:center;
+    font-size:30px;
+    line-height:1;
+    color:var(--accent);
+  }
+  .chathead .avatar{width:42px;height:42px}
+  .chathead .name{font-size:16px}
+  .chathead .sub{font-size:11px}
+
+  .messages{
+    width:100%;
+    min-height:0!important;
+    height:auto!important;
+    flex:1 1 auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+    padding:14px 10px 14px;
+    gap:6px;
+    scroll-behavior:auto;
+  }
+  .bubble{
+    max-width:82%;
+    padding:9px 12px 7px;
+    border-radius:17px;
+    font-size:16px;
+  }
+  .bubble.mine{border-bottom-right-radius:5px}
+  .bubble:not(.mine){border-bottom-left-radius:5px}
+
+  .composer{
+    width:100%;
+    min-height:60px;
+    flex:0 0 auto;
+    position:relative;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+    background:color-mix(in srgb,var(--panel) 96%,var(--bg));
+    border-top:1px solid var(--line);
+  }
+  .composer input{
+    height:44px;
+    min-height:44px;
+    border-radius:22px;
+    padding:0 15px;
+    font-size:16px;
+  }
+  .send{
+    height:44px;
+    min-width:82px;
+    padding:0 15px;
+    border-radius:22px;
+    font-size:15px;
+  }
+
+  /* Don't let the browser/page itself steal the gesture */
+  .drawer,.overlay{overscroll-behavior:contain}
+  .drawerbox{
+    width:min(320px,88vw);
+    padding-top:calc(16px + env(safe-area-inset-top));
+    padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  }
+
+  /* Login also fills the phone naturally */
+  .auth{
+    width:calc(100% - 28px);
+    max-width:430px;
+    margin:0 auto;
+    border-radius:24px;
+    padding:24px;
+  }
+}
+
+/* Very small phones */
+@media (max-width:380px){
+  .send{min-width:70px;padding:0 11px}
+  .bubble{max-width:86%}
+  .composer{gap:5px;padding-left:7px;padding-right:7px}
+}
+
+
+.profilePage{text-align:center}.profileHero{padding:4px 0 16px}.profileHero .iconbtn{display:block;text-align:left}.profileAvatar{width:96px;height:96px;margin:4px auto 12px;font-size:30px}.profileHero h2{margin:4px 0;font-size:24px}.profileOnline{color:#34c759;font-size:13px;margin-top:3px}.profileId{color:var(--muted);font-size:12px;margin-top:4px}.profileActions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0 12px}.profileActions button{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:12px 8px;font-weight:700}.profileActions span{display:block;font-size:12px;margin-top:5px}.profileCard{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:15px;text-align:left}.profileValue{font-size:17px;margin-top:8px;overflow-wrap:anywhere}.profileCard .sub{margin-bottom:10px}.modal .profilePage .actions{justify-content:center}.modal .profilePage .actions button{flex:1}
+</style></head>
+<body>
+<div id="loading" class="loading"><div><div class="spinner"></div><div>Ulanmoqda...</div></div></div><div id="app"></div>
+<div id="drawer" class="drawer"><div class="drawerbox"><div class="top" style="padding:0 0 18px;border:0"><div class="logo">M</div><div class="brand">MXX Messenger</div><button class="iconbtn" id="closeDrawer">×</button></div><button class="draweritem" id="openProfile">👤 Profilim</button><button class="draweritem" id="newGroup">👥 Guruh yaratish</button><button class="draweritem" id="newChannel">📢 Kanal yaratish</button><button class="draweritem" id="theme">🌙 Mavzuni almashtirish</button><button class="draweritem" id="logout">↪ Chiqish</button></div></div>
+<div id="modal" class="overlay"><div class="modal" id="modalContent"></div></div><div id="toast" class="toast"></div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,collection,query,where,getDocs,addDoc,onSnapshot,orderBy,serverTimestamp,deleteDoc,limit,startAfter,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDzTF74nhnljVJFGCZJAvR6hR-n5qYFzCE",authDomain:"mxx-messenger.firebaseapp.com",projectId:"mxx-messenger",storageBucket:"mxx-messenger.firebasestorage.app",messagingSenderId:"724102984185",appId:"1:724102984185:web:5871ef94ccc730210d8d28",measurementId:"G-WHKCVHTRH6"};
+const $=id=>document.getElementById(id);let auth,db,user=null,profile=null,current=null,unsub=null,tab="all",records=[];let selectionMode=false,selectedRooms=new Set(),suppressNextClick=false,pressTimer=null;let firstMessageLoad=true;let unreadTimer=null,unreadBusy=false;
+const hideLoading=()=>$("loading").style.display="none";function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",3000)}function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function initials(s="M"){return esc((String(s).trim().split(/\s+/).slice(0,2).map(x=>x[0]).join("")||"M").toUpperCase())}function showModal(html){$("modalContent").innerHTML=html;$("modal").classList.add("show")}function closeModal(){$("modal").classList.remove("show")}$("modal").onclick=e=>{if(e.target===$("modal"))closeModal()};
+function authScreen(){$("app").innerHTML=`<div class="auth"><div class="logo">M</div><h1>MXX Messenger</h1><div class="muted">Yaqinlaringiz bilan sodda va qulay muloqot.</div><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" placeholder="email@example.com"></div><div class="field"><label>Parol</label><input id="password" type="password" autocomplete="current-password" placeholder="Kamida 6 belgi"></div><button class="primary" id="login">Kirish</button><button class="link" id="register">Yangi hisob yaratish</button><button class="link" id="forgot">Parolni unutdingizmi?</button><div id="authError" class="error"></div></div>`;$('login').onclick=()=>authAction(false);$('register').onclick=()=>authAction(true);$('forgot').onclick=forgotPassword}
+async function authAction(create){const errEl=$("authError");errEl.textContent="";const e=$("email").value.trim(),p=$("password").value;if(!e){errEl.textContent="Email manzilini kiriting.";return}if(!p){errEl.textContent="Parolni kiriting.";return}if(create&&p.length<6){errEl.textContent="Parol kamida 6 belgidan iborat bo‘lsin.";return}const btn=create?$("register"):$("login");if(btn){btn.disabled=true;btn.textContent=create?"Hisob yaratilmoqda...":"Kirilmoqda..."}try{if(create){const cred=await createUserWithEmailAndPassword(auth,e,p);try{await setDoc(doc(db,"users",cred.user.uid),{uid:cred.user.uid,name:e.split("@")[0]||"Foydalanuvchi",username:"",bio:"",createdAt:serverTimestamp()},{merge:true})}catch(profileError){console.warn("Profil yaratilmadi:",profileError)}toast("Yangi hisob yaratildi.")}else{await signInWithEmailAndPassword(auth,e,p);toast("Kirish muvaffaqiyatli.")}}catch(ex){const code=ex?.code||"";if(code==="auth/email-already-in-use")errEl.textContent="Bu email bilan hisob allaqachon mavjud. Kirishni bosing yoki parolni tiklang.";else if(code==="auth/invalid-email")errEl.textContent="Email manzili noto‘g‘ri.";else if(code==="auth/weak-password")errEl.textContent="Parol juda zaif. Kamida 6 belgi kiriting.";else if(code==="auth/operation-not-allowed")errEl.textContent="Firebase’da Email/Password kirish usuli yoqilmagan. Authentication → Sign-in method → Email/Password ni yoqing.";else if(code==="auth/invalid-credential"||code==="auth/wrong-password"||code==="auth/user-not-found")errEl.textContent="Email yoki parol noto‘g‘ri.";else errEl.textContent=ex?.message||"Xatolik yuz berdi."}finally{if(btn){btn.disabled=false;btn.textContent=create?"Yangi hisob yaratish":"Kirish"}}}
+async function forgotPassword(){const errEl=$("authError");errEl.textContent="";const e=$("email").value.trim();if(!e){errEl.textContent="Avval email manzilingizni kiriting.";$("email").focus();return}const btn=$("forgot");if(btn){btn.disabled=true;btn.textContent="Yuborilmoqda..."}try{await sendPasswordResetEmail(auth,e);errEl.textContent="Parolni tiklash havolasi emailingizga yuborildi. Emailni tekshiring.";toast("Tiklash xati yuborildi.")}catch(ex){const code=ex?.code||"";if(code==="auth/invalid-email")errEl.textContent="Email manzili noto‘g‘ri.";else if(code==="auth/user-not-found")errEl.textContent="Bu email bilan hisob topilmadi.";else if(code==="auth/operation-not-allowed")errEl.textContent="Firebase’da Email/Password kirish usuli yoqilmagan.";else errEl.textContent=ex?.message||"Parolni tiklashda xatolik yuz berdi."}finally{if(btn){btn.disabled=false;btn.textContent="Parolni unutdingizmi?"}}}
+function renderApp(){const inchat=!!current;
+const topBar=selectionMode?`<div class="selectionTop">
+<button class="selBtn" id="cancelSelect" title="Bekor qilish">×</button>
+<div class="selCount">${selectedRooms.size}</div>
+<div class="selTitle">Tanlandi</div>
+<button class="selBtn" id="selectAll" title="Hammasini tanlash">✓</button>
+<button class="selBtn selDelete" id="deleteSelected" title="O‘chirish">♲</button>
+</div>`:`<div class="top"><button class="iconbtn" id="hamb">☰</button><div class="logo">M</div><div class="brand">MXX</div><button class="iconbtn" id="searchBtn">⌕</button></div>`;
+$("app").innerHTML=`<div class="shell ${inchat?"inchat":""}"><aside class="sidebar">${topBar}<div class="search">⌕ <input id="search" placeholder="Qidirish..." autocomplete="off"></div><div class="tabs"><button class="tab ${tab==='all'?'active':''}" data-tab="all">Hammasi</button><button class="tab ${tab==='chats'?'active':''}" data-tab="chats">Shaxsiy</button><button class="tab ${tab==='groups'?'active':''}" data-tab="groups">Guruhlar</button><button class="tab ${tab==='channels'?'active':''}" data-tab="channels">Kanallar</button></div><div class="list" id="list"></div><div class="profilebar"><div class="avatar small">${initials(profile?.name||"Men")}</div><div class="meta"><div class="name">${esc(profile?.name||"Profil")}</div><div class="sub">@${esc(profile?.username||"username")}</div></div><button class="iconbtn" id="profileQuick">⚙</button></div></aside><main class="main" id="main">${inchat?chatView():`<div class="welcome"><div><div class="hero">✦</div><h2>MXX Messenger</h2><p>Chatni tanlang yoki yangi suhbat boshlang.</p><button class="primary" id="startSearch" style="width:auto">Foydalanuvchi qidirish</button></div></div>`}</main></div>`;
+if(selectionMode){
+  $("cancelSelect").onclick=cancelSelection;
+  $("selectAll").onclick=selectAllRooms;
+  $("deleteSelected").onclick=deleteSelectedRooms;
+}else{
+  $("hamb").onclick=()=>$("drawer").classList.add("show");
+}
+$("closeDrawer").onclick=()=>$("drawer").classList.remove("show");$("theme").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("mxxDark",document.body.classList.contains("dark"))};$("logout").onclick=()=>signOut(auth);$("openProfile").onclick=profileModal;$("profileQuick").onclick=profileModal;$("newGroup").onclick=()=>createRoom("group");$("newChannel").onclick=()=>createRoom("channel");
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{selectionMode=false;selectedRooms.clear();tab=b.dataset.tab;current=null;if(unsub){unsub();unsub=null}renderApp()});$("search").oninput=()=>filterList($("search").value);$("search").onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();searchUsers($("search").value)}};$("searchBtn").onclick=()=>searchUsers($("search").value);$("startSearch")?.addEventListener('click',()=>searchUsers(''));if(current){$("back").onclick=()=>{current=null;if(unsub){unsub();unsub=null}renderApp()};$("info").onclick=roomInfo;$(".chathead .meta")?.addEventListener("click",roomInfo);if(current.type!=='channel'||current.admin)$("composer").onsubmit=sendMessage;subscribeMessages()}loadList();startUnreadPolling();}
+function chatView(){return `<div class="chathead"><button class="iconbtn mobileback" id="back">‹</button><div class="avatar">${initials(current.title)}</div><div class="meta"><div class="name">${esc(current.title)}</div><div class="sub">${esc(current.subtitle||'MXX Messenger')}</div></div><button class="iconbtn" id="info">ⓘ</button></div><div class="messages" id="messages"></div>${current.type==='channel'&&!current.admin?'':`<form class="composer" id="composer"><input id="message" placeholder="Xabar yozing..." autocomplete="off"><button class="send">Yuborish</button></form>`}`}
+async function loadProfile(u){const r=await getDoc(doc(db,'users',u.uid));if(r.exists())return r.data();const p={uid:u.uid,name:u.email?.split('@')[0]||'Foydalanuvchi',username:'',bio:'',createdAt:serverTimestamp()};await setDoc(doc(db,'users',u.uid),p);return p}
+function ts(v){return v?.toMillis?v.toMillis():0}async function loadList(){
+if(!user||!$("list"))return;
+let arr=[], errors=[];
+const addError=(name,e)=>errors.push(name+': '+(e?.message||e));
+if(tab==='all'||tab==='chats'){
+  try{
+    const q=await getDocs(query(collection(db,'chats'),where('participants','array-contains',user.uid)));
+    const profiles=await Promise.all(q.docs.map(async d=>{
+      const x=d.data(),other=x.participants?.find(id=>id!==user.uid);
+      if(!other)return null;
+      try{
+        const p=await getDoc(doc(db,'users',other));
+        return {d,x,other,p:p.exists()?p.data():{}};
+      }catch(e){return {d,x,other,p:{}}}
+    }));
+    profiles.forEach(v=>{if(v)arr.push({id:v.d.id,type:'chat',title:v.p.name||'Chat',subtitle:v.x.lastMessage||'Suhbat',other:v.other,updatedAt:ts(v.x.updatedAt)})});
+  }catch(e){addError('Shaxsiy',e)}
+}
+if(tab==='all'||tab==='groups'){
+  try{
+    const q=await getDocs(query(collection(db,'groups'),where('memberIds','array-contains',user.uid)));
+    q.forEach(d=>{const x=d.data();arr.push({id:d.id,type:'group',title:x.name||'Nomsiz',subtitle:x.description||'Guruh',admin:x.admins?.includes(user.uid),updatedAt:ts(x.updatedAt||x.createdAt)})});
+  }catch(e){addError('Guruhlar',e)}
+}
+if(tab==='all'||tab==='channels'){
+  try{
+    const q=await getDocs(query(collection(db,'channels'),where('subscriberIds','array-contains',user.uid)));
+    q.forEach(d=>{const x=d.data();arr.push({id:d.id,type:'channel',title:x.name||'Nomsiz',subtitle:x.description||'Kanal',admin:x.admins?.includes(user.uid),updatedAt:ts(x.updatedAt||x.createdAt)})});
+  }catch(e){addError('Kanallar',e)}
+}
+arr=arr.filter(x=>!isRoomHidden(x));
+arr.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+records=arr.map(x=>({...x,unread:0}));
+drawList(records);
+loadUnreadCounts(records);
+if(errors.length)toast('Ayrim bo‘limlar yuklanmadi. Firestore Rules faylini yangilang.');
+}
+function roomMessageCollection(x){return collection(db,...(x.type==='chat'?['chats',x.id,'messages']:x.type==='group'?['groups',x.id,'messages']:['channels',x.id,'posts']))}
+function readKey(x){return `${x.type}_${x.id}`}
+function readAtFor(x){return Number(profile?.readAt?.[readKey(x)]||0)}
+async function markRoomRead(x){
+  if(!user||!x)return;
+  const now=Date.now();
+  const key=readKey(x);
+  profile={...profile,readAt:{...(profile?.readAt||{}),[key]:now}};
+  try{
+    // Update only this room's read timestamp; do not erase other rooms.
+    try{await updateDoc(doc(db,'users',user.uid),{[`readAt.${key}`]:now})}catch(e){await setDoc(doc(db,'users',user.uid),{uid:user.uid,readAt:{[key]:now}},{merge:true})}
+  }catch(e){console.warn('read state:',e)}
+}
+async function unreadCount(x){
+  const since=readAtFor(x);
+  if(!user||!x)return 0;
+  try{
+    const ref=roomMessageCollection(x);
+    let snap;
+    if(since>0){
+      const {Timestamp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      snap=await getDocs(query(ref,where('createdAt','>',Timestamp.fromMillis(since))));
+    }else{
+      snap=await getDocs(ref);
+    }
+    let n=0;
+    snap.forEach(d=>{
+      const m=d.data()||{};
+      const sender=m.senderId||m.uid||m.from;
+      if(sender===user.uid)return;
+      const t=messageTime(m);
+      // Legacy messages without a timestamp are only counted on first load.
+      if((since===0 && !t) || t>since)n++;
+    });
+    return n;
+  }catch(e){
+    // Fallback for older messages / query issues.
+    try{
+      const snap=await getDocs(roomMessageCollection(x));
+      let n=0;
+      snap.forEach(d=>{
+        const m=d.data()||{},sender=m.senderId||m.uid||m.from,t=messageTime(m);
+        if(sender!==user.uid && t>since)n++;
+      });
+      return n;
+    }catch(_){return 0}
+  }
+}
+async function loadUnreadCounts(arr){
+  if(!arr.length||!user||unreadBusy)return;
+  unreadBusy=true;
+  try{
+    const counts=await Promise.all(arr.map(async x=>[readKey(x),await unreadCount(x)]));
+    const map=Object.fromEntries(counts);
+    records=records.map(x=>({...x,unread:map[readKey(x)]||0}));
+    const search=$('search')?.value||'';
+    const q=search.trim().toLowerCase();
+    const filtered=q?records.filter(x=>x.title.toLowerCase().includes(q)||x.subtitle.toLowerCase().includes(q)):records;
+    drawList(filtered);
+  }finally{unreadBusy=false}
+}
+function startUnreadPolling(){
+  if(unreadTimer)clearInterval(unreadTimer);
+  unreadTimer=setInterval(()=>{
+    if(document.visibilityState==='hidden'||!user||current)return;
+    loadUnreadCounts(records);
+  },8000);
+}
+function stopUnreadPolling(){if(unreadTimer){clearInterval(unreadTimer);unreadTimer=null}}
+function roomKey(x){return `${x.type}_${x.id}`}
+function isRoomHidden(x){
+  try{return JSON.parse(localStorage.getItem('mxxHiddenRooms')||'[]').includes(roomKey(x))}
+  catch(e){return false}
+}
+function setRoomHidden(keys){
+  try{
+    const old=JSON.parse(localStorage.getItem('mxxHiddenRooms')||'[]');
+    const merged=[...new Set([...old,...keys])];
+    localStorage.setItem('mxxHiddenRooms',JSON.stringify(merged));
+  }catch(e){}
+}
+function enterSelection(x){
+  selectionMode=true;
+  selectedRooms.clear();
+  selectedRooms.add(roomKey(x));
+  suppressNextClick=true;
+  renderApp();
+}
+function toggleRoomSelection(x){
+  const k=roomKey(x);
+  if(selectedRooms.has(k)) selectedRooms.delete(k); else selectedRooms.add(k);
+  if(selectedRooms.size===0){selectionMode=false;selectedRooms.clear()}
+  renderApp();
+}
+function cancelSelection(){
+  selectionMode=false;
+  selectedRooms.clear();
+  suppressNextClick=false;
+  if(pressTimer){clearTimeout(pressTimer);pressTimer=null}
+  renderApp();
+}
+function selectAllRooms(){
+  records.forEach(x=>selectedRooms.add(roomKey(x)));
+  renderApp();
+}
+async function deleteSelectedRooms(){
+  const count=selectedRooms.size;
+  if(!count)return;
+  if(!confirm(`${count} ta yozishmani o‘chirishni xohlaysizmi?`))return;
+  const keys=[...selectedRooms];
+  setRoomHidden(keys);
+  selectionMode=false;
+  selectedRooms.clear();
+  suppressNextClick=false;
+  current=null;
+  if(unsub){unsub();unsub=null}
+  toast(`${count} ta yozishma o‘chirildi`);
+  renderApp();
+}
+function startLongPress(node,x){
+  if(pressTimer)clearTimeout(pressTimer);
+  pressTimer=setTimeout(()=>{
+    pressTimer=null;
+    if(!selectionMode)enterSelection(x);
+  },3000);
+}
+function stopLongPress(){
+  if(pressTimer){clearTimeout(pressTimer);pressTimer=null}
+}
+function drawList(arr){
+  const el=$("list");if(!el)return;
+  el.innerHTML=arr.length?arr.map((x,i)=>{
+    const selected=selectedRooms.has(roomKey(x));
+    return `<div class="item ${current?.id===x.id?'active':''} ${selected?'selected':''}" data-i="${i}">
+      <div class="avatar">${initials(x.title)}</div>
+      <div class="meta"><div class="name">${esc(x.title)}</div><div class="sub">${esc(x.subtitle||'')}</div></div>
+      <div class="itemRight">
+        ${x.updatedAt?`<div class="lasttime">${new Date(x.updatedAt).toLocaleDateString('uz-UZ',{day:'2-digit',month:'2-digit'})}</div>`:''}
+        ${x.unread>0?`<div class="badge">${x.unread>99?'99+':x.unread}</div>`:''}
+      </div>
+    </div>`
+  }).join(''):`<div class="empty">Hozircha hech narsa yo‘q</div>`;
+
+  el.querySelectorAll('[data-i]').forEach(n=>{
+    const x=arr[+n.dataset.i];
+    n.onpointerdown=e=>{
+      if(e.pointerType==='mouse' && e.button!==0)return;
+      startLongPress(n,x);
+    };
+    n.onpointerup=stopLongPress;
+    n.onpointercancel=stopLongPress;
+    n.onpointerleave=e=>{if(e.pointerType==='mouse')stopLongPress()};
+    n.oncontextmenu=e=>e.preventDefault();
+    n.onclick=e=>{
+      if(suppressNextClick){suppressNextClick=false;return}
+      if(selectionMode){toggleRoomSelection(x);return}
+      openRoom(x);
+    };
+  });
+}
+function filterList(v){const s=v.trim().toLowerCase();drawList(!s?records:records.filter(x=>x.title.toLowerCase().includes(s)||x.subtitle.toLowerCase().includes(s)))}
+function normalizeUsername(v=""){
+  return String(v).trim().replace(/^@+/,'').toLowerCase();
+}
+function validUsername(v){return /^[a-z0-9_]{3,32}$/.test(v)}
+async function resolveUsername(raw){
+  const val=normalizeUsername(raw);
+  if(!validUsername(val)) return null;
+  const registryRef=doc(db,'usernames',val);
+  const direct=await getDoc(registryRef);
+  if(direct.exists()){
+    const x=direct.data()||{};
+    if(x.type==='user' && x.uid){
+      const pr=await getDoc(doc(db,'users',x.uid));
+      if(pr.exists()){
+        const p=pr.data()||{};
+        if(normalizeUsername(p.username)===val) return {kind:'user',uid:x.uid,profile:p,source:'index'};
+      }
+    }
+    if(x.type==='channel' && x.uid && (x.roomType==='group'||x.roomType==='channel')){
+      const col=x.roomType==='group'?'groups':'channels';
+      const room=await getDoc(doc(db,col,x.uid));
+      if(room.exists() && normalizeUsername(room.data()?.username)===val)
+        return {kind:'room',uid:x.uid,roomType:x.roomType,room:room.data(),source:'index'};
+    }
+  }
+  // Legacy/fallback search: even if the usernames index is missing or old,
+  // an actually saved username can still be found.
+  const uq=await getDocs(query(collection(db,'users'),where('username','==',val),limit(5)));
+  for(const d of uq.docs){
+    const p=d.data()||{};
+    if(p.uid && normalizeUsername(p.username)===val)
+      return {kind:'user',uid:p.uid,profile:p,source:'users'};
+  }
+  const iq=await getDocs(query(collection(db,'usernames'),where('username','==',val),limit(5)));
+  for(const d of iq.docs){
+    const x=d.data()||{};
+    if(x.type==='user' && x.uid){
+      const pr=await getDoc(doc(db,'users',x.uid));
+      if(pr.exists() && normalizeUsername(pr.data()?.username)===val)
+        return {kind:'user',uid:x.uid,profile:pr.data(),source:'index-query'};
+    }
+  }
+  for(const [col,roomType] of [['groups','group'],['channels','channel']]){
+    const rq=await getDocs(query(collection(db,col),where('username','==',val),limit(5)));
+    for(const d of rq.docs){
+      const room=d.data()||{};
+      if(normalizeUsername(room.username)===val)
+        return {kind:'room',uid:d.id,roomType,room,source:'rooms'};
+    }
+  }
+  return null;
+}
+async function searchUsers(initial=''){
+  showModal(`<h2>Foydalanuvchi qidirish</h2><div class="field"><input id="findUser" placeholder="@username" value="${esc(initial)}" autocomplete="off"></div><div id="found" class="empty">Username yozing — mavjud foydalanuvchi, guruh yoki kanal chiqadi.</div><div class="actions"><button id="closeSearch">Yopish</button><button class="solid" id="doFind">Qidirish</button></div>`);
+  $("closeSearch").onclick=closeModal;
+  $("doFind").onclick=findUser;
+  const input=$("findUser");let timer=null;
+  input.oninput=()=>{clearTimeout(timer);timer=setTimeout(findUser,250)};
+  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();clearTimeout(timer);findUser()}};
+  if(initial.trim())findUser();
+  input.focus();
+}
+async function findUser(){
+  const val=normalizeUsername($("findUser").value),out=$("found");
+  if(!val){out.textContent='Username kiriting.';return}
+  if(!validUsername(val)){
+    out.textContent='Username 3–32 belgidan iborat bo‘lsin: faqat a–z, 0–9 va _.';
+    return;
+  }
+  out.textContent='Qidirilmoqda...';
+  try{
+    const result=await resolveUsername(val);
+    if(!result){out.textContent='Bunday username topilmadi.';return}
+
+    if(result.kind==='user'){
+      const p=result.profile||{};
+      if(result.uid===user.uid){
+        out.innerHTML=`<div class="item" style="cursor:default"><div class="avatar">${initials(p.name||val)}</div><div class="meta"><div class="name">${esc(p.name||'Foydalanuvchi')}</div><div class="sub">@${esc(val)} · Bu siz</div></div></div>`;
+        return;
+      }
+      out.innerHTML=`<div class="item" style="cursor:default"><div class="avatar">${initials(p.name||val)}</div><div class="meta"><div class="name">${esc(p.name||'Foydalanuvchi')}</div><div class="sub">@${esc(val)}</div></div><button class="send" id="messageUser">Yozish</button></div>`;
+      $("messageUser").onclick=e=>{e.stopPropagation();startChat(p)};
+      return;
+    }
+
+    const room=result.room||{};
+    const joined=(room[result.roomType==='group'?'memberIds':'subscriberIds']||[]).includes(user.uid);
+    const kind=result.roomType==='group'?'Guruh':'Kanal';
+    out.innerHTML=`<div class="item" style="cursor:default"><div class="avatar">${initials(room.name||val)}</div><div class="meta"><div class="name">${esc(room.name||kind)}</div><div class="sub">@${esc(val)} · ${kind}</div></div><button class="send" id="joinRoomBtn" ${joined?'disabled':''}>${joined?'Qo‘shilgan':'Qo‘shilish'}</button></div><div id="joinErr" class="error"></div>`;
+    $("joinRoomBtn").onclick=async()=>{
+      const btn=$("joinRoomBtn"),err=$("joinErr");
+      btn.disabled=true;btn.textContent='Qo‘shilmoqda...';
+      try{
+        const col=result.roomType==='group'?'groups':'channels';
+        const field=result.roomType==='group'?'memberIds':'subscriberIds';
+        const ref=doc(db,col,result.uid);
+        await runTransaction(db,async tx=>{
+          const snap=await tx.get(ref);
+          if(!snap.exists())throw new Error(`${kind} topilmadi.`);
+          const data=snap.data()||{},old=Array.isArray(data[field])?data[field]:[];
+          if(old.includes(user.uid))return;
+          tx.update(ref,{[field]:[...old,user.uid],updatedAt:serverTimestamp()});
+        });
+        tab=result.roomType==='group'?'groups':'channels';
+        current={id:result.uid,type:result.roomType,title:room.name||kind,subtitle:room.description||kind,admin:(room.admins||[]).includes(user.uid)};
+        closeModal();
+        renderApp();
+        toast(kind+'ga qo‘shildingiz');
+      }catch(e){
+        btn.disabled=false;btn.textContent='Qo‘shilish';
+        err.textContent='Qo‘shib bo‘lmadi: '+(e?.message||e);
+      }
+    };
+  }catch(e){out.textContent='Qidirishda xatolik: '+(e?.message||e)}
+}
+
+function chatId(a,b){return [a,b].sort().join('_')}async function startChat(p){try{const id=chatId(user.uid,p.uid),ref=doc(db,'chats',id);await setDoc(ref,{participants:[user.uid,p.uid],lastMessage:'',updatedAt:serverTimestamp()},{merge:true});closeModal();current={id,type:'chat',title:p.name,subtitle:'Shaxsiy suhbat',other:p.uid};tab='all';renderApp();setTimeout(()=>$("message")?.focus(),100)}catch(e){toast('Chat ochilmadi: '+e.message)}}async function openRoom(x){
+  current={...x};
+  if(x.type==='chat')current.other=x.other;
+  await markRoomRead(x);
+  current.unread=0;
+  renderApp();
+}
+function messageTime(m){
+  const v=m.createdAt||m.timestamp||m.sentAt||m.time;
+  if(v?.toMillis)return v.toMillis();
+  if(v?.toDate)return v.toDate().getTime();
+  if(typeof v==='number')return v;
+  if(typeof v==='string'){const n=Date.parse(v);return Number.isNaN(n)?0:n}
+  return 0;
+}
+function messageText(m){
+  return m.text ?? m.message ?? m.content ?? m.body ?? '';
+}
+function subscribeMessages(){
+  if(unsub)unsub();
+  firstMessageLoad=true;
+  const c=current;
+  const path=c.type==='chat'?['chats',c.id,'messages']:c.type==='group'?['groups',c.id,'messages']:['channels',c.id,'posts'];
+  const ref=collection(db,...path);
+  let messageMap=new Map();
+
+  const render=()=>{
+    const box=$("messages");
+    if(!box)return;
+    const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<140;
+    const oldHeight=box.scrollHeight,oldTop=box.scrollTop;
+    const arr=Array.from(messageMap.values()).sort((a,b)=>messageTime(a.data)-messageTime(b.data));
+
+    box.innerHTML='';
+    arr.forEach(({id,data:m})=>{
+      const mine=m.senderId===user.uid || m.uid===user.uid || m.from===user.uid;
+      const div=document.createElement('div');
+      div.className='bubble'+(mine?' mine':'');
+      div.dataset.id=id;
+      const sender=m.senderName||m.sender||m.name||'';
+      const tm=messageTime(m);
+      const time=tm?new Date(tm).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'}):'';
+      div.innerHTML=`${
+        c.type!=='chat'
+        ? `<div class="sender">${esc(mine?(profile?.name||'Siz'):(sender||'Foydalanuvchi'))}</div>`
+        : ''
+      }<div>${esc(messageText(m))}</div><div class="time">${time}</div>${
+        mine?`<button class="deleteMsg" title="O‘chirish">O‘chirish</button>`:''
+      }`;
+      box.appendChild(div);
+      if(mine)div.querySelector('.deleteMsg').onclick=()=>deleteMessage(id);
+    });
+
+    if(firstMessageLoad){
+      box.scrollTop=box.scrollHeight;
+      firstMessageLoad=false;
+    }else if(nearBottom){
+      box.scrollTop=box.scrollHeight;
+    }else{
+      box.scrollTop=Math.max(0,oldTop+(box.scrollHeight-oldHeight));
+    }
+  };
+
+  // No orderBy is used here. This makes old messages visible even if some
+  // legacy documents don't have a createdAt field.
+  unsub=onSnapshot(ref,snap=>{
+    messageMap.clear();
+    snap.docs.forEach(d=>messageMap.set(d.id,{id:d.id,data:d.data()}));
+    render();
+  },e=>toast('Yozishmalar yuklanmadi: '+e.message));
+
+  setTimeout(()=>{
+    const box=$("messages");
+    if(box)box.onscroll=()=>{};
+  },0);
+}
+
+async function deleteMessage(id){if(!confirm('Xabarni o‘chirasizmi?'))return;try{const c=current,path=c.type==='chat'?['chats',c.id,'messages',id]:c.type==='group'?['groups',c.id,'messages',id]:['channels',c.id,'posts',id];await deleteDoc(doc(db,...path))}catch(e){toast('O‘chirilmadi: '+e.message)}}
+async function sendMessage(e){e.preventDefault();const input=$("message"),text=input.value.trim();if(!text)return;const c=current;input.disabled=true;try{const path=c.type==='chat'?['chats',c.id,'messages']:c.type==='group'?['groups',c.id,'messages']:['channels',c.id,'posts'];await addDoc(collection(db,...path),{senderId:user.uid,senderName:profile.name,text,createdAt:serverTimestamp()});if(c.type==='chat')await updateDoc(doc(db,'chats',c.id),{lastMessage:text,updatedAt:serverTimestamp()});else await updateDoc(doc(db,c.type==='group'?'groups':'channels',c.id),{updatedAt:serverTimestamp()});input.value=''}catch(err){toast('Xabar yuborilmadi: '+err.message)}finally{input.disabled=false;input.focus()}}
+function profileModal(){showModal(`<div class="profilePage"><div class="profileHero"><button class="iconbtn" id="profileClose">‹</button><div class="avatar profileAvatar">${initials(profile?.name||'Men')}</div><h2>${esc(profile?.name||'Foydalanuvchi')}</h2><div class="profileOnline">● onlayn</div><div class="profileId">id: ${esc(user?.uid||'')}</div></div><div class="profileActions"><button id="editMyProfile">✎<span>Axborotni tahrirlash</span></button><button id="mySettings">⚙<span>Sozlamalar</span></button></div><div class="profileCard"><div class="profileValue">@${esc(profile?.username||'')}</div><div class="sub">Foydalanuvchi nomi</div><div class="profileValue">${esc(profile?.bio||'Tarjimai hol kiritilmagan')}</div><div class="sub">Tarjimai hol</div></div></div>`);$('profileClose').onclick=closeModal;$('editMyProfile').onclick=()=>editProfileModal();$('mySettings').onclick=()=>{closeModal();$('drawer').classList.add('show')}}
+function editProfileModal(){showModal(`<h2>Profilni tahrirlash</h2><div class="field"><label>Ism</label><input id="pName" value="${esc(profile.name||'')}"></div><div class="field"><label>Username (ixtiyoriy)</label><input id="pUser" value="${esc(profile.username||'')}"></div><div class="field"><label>Tarjimai hol</label><textarea id="pBio" rows="3">${esc(profile.bio||'')}</textarea></div><div class="actions"><button id="cancelP">Bekor qilish</button><button class="solid" id="saveP">Saqlash</button></div><div id="pErr" class="error"></div>`);$('cancelP').onclick=closeModal;$('saveP').onclick=saveProfile}
+async function saveProfile(){
+  const name=$("pName").value.trim(),username=normalizeUsername($("pUser").value),bio=$("pBio").value.trim(),err=$("pErr");
+  err.textContent='';
+  if(!name){err.textContent='Ismni kiriting.';return}
+  if(username&&!validUsername(username)){err.textContent='Username 3–32 belgidan iborat bo‘lsin: faqat a–z, 0–9 va _.';return}
+  const btn=$("saveP");if(btn){btn.disabled=true;btn.textContent='Saqlanmoqda...'}
+  try{
+    const oldUsername=normalizeUsername(profile?.username);
+    await runTransaction(db,async tx=>{
+      const userRef=doc(db,'users',user.uid);
+      const newRef=username?doc(db,'usernames',username):null;
+      const oldRef=oldUsername?doc(db,'usernames',oldUsername):null;
+      let existing=null;
+      if(newRef)existing=await tx.get(newRef);
+      if(existing?.exists() && existing.data()?.uid!==user.uid)throw new Error('Bu username band.');
+      tx.set(userRef,{uid:user.uid,name,username,bio},{merge:true});
+      if(username)tx.set(newRef,{uid:user.uid,username,type:'user'});
+      if(oldUsername&&oldUsername!==username)tx.delete(oldRef);
+      if(!username&&oldUsername)tx.delete(oldRef);
+    });
+    profile={...profile,uid:user.uid,name,username,bio};closeModal();renderApp();toast('Profil saqlandi');
+  }catch(e){console.error(e);err.textContent='Saqlashda xatolik: '+(e?.message||e)}
+  finally{if(btn){btn.disabled=false;btn.textContent='Saqlash'}}
+}
+
+async function createRoom(type){
+  showModal(`<h2>${type==='group'?'Guruh':'Kanal'} yaratish</h2><div class="field"><label>Nomi</label><input id="roomName" placeholder="Nomi"></div><div class="field"><label>Username (ixtiyoriy)</label><input id="roomUser" placeholder="masalan_mxx"></div><div class="field"><label>Tavsif</label><textarea id="roomDesc" rows="3"></textarea></div><div class="actions"><button id="cancelRoom">Bekor qilish</button><button class="solid" id="makeRoom">Yaratish</button></div><div id="roomErr" class="error"></div>`);
+  $("cancelRoom").onclick=closeModal;
+  $("makeRoom").onclick=async()=>{
+    const name=$("roomName").value.trim(),username=normalizeUsername($("roomUser").value),description=$("roomDesc").value.trim(),err=$("roomErr"),btn=$("makeRoom");
+    if(!name){err.textContent='Nom kiriting.';return}
+    if(username&&!validUsername(username)){err.textContent='Username 3–32 belgidan iborat bo‘lsin: faqat a–z, 0–9 va _.';return}
+    btn.disabled=true;btn.textContent='Yaratilmoqda...';
+    try{
+      const col=type==='group'?'groups':'channels';
+      const data=type==='group'?{name,username:'',description,ownerId:user.uid,memberIds:[user.uid],admins:[user.uid],createdAt:serverTimestamp(),updatedAt:serverTimestamp()}:{name,username:'',description,ownerId:user.uid,subscriberIds:[user.uid],admins:[user.uid],createdAt:serverTimestamp(),updatedAt:serverTimestamp()};
+      const roomRef=doc(collection(db,col));
+      await setDoc(roomRef,data);
+      if(username){
+        const indexRef=doc(db,'usernames',username);
+        try{
+          await runTransaction(db,async tx=>{
+            const indexSnap=await tx.get(indexRef);
+            if(indexSnap.exists())throw new Error('Bu username band. Boshqa username tanlang.');
+            tx.set(indexRef,{uid:roomRef.id,type:'channel',roomType:type,username});
+            tx.update(roomRef,{username,updatedAt:serverTimestamp()});
+          });
+        }catch(e){
+          try{await deleteDoc(roomRef)}catch(_){ }
+          throw e;
+        }
+      }
+      closeModal();tab=type==='group'?'groups':'channels';current={id:roomRef.id,type,title:name,subtitle:description,admin:true};renderApp();toast(type==='group'?'Guruh yaratildi':'Kanal yaratildi');
+    }catch(e){err.textContent=e?.message||String(e);btn.disabled=false;btn.textContent='Yaratish'}
+  };
+}
+
+async function roomInfo(){const c=current;if(c.type==='chat'){const p=(await getDoc(doc(db,'users',c.other))).data()||{};showModal(`<div class="profilePage"><div class="profileHero"><button class="iconbtn" id="x">‹</button><div class="avatar profileAvatar">${initials(p.name)}</div><h2>${esc(p.name||'Foydalanuvchi')}</h2><div class="profileOnline">● onlayn</div><div class="profileId">id: ${esc(p.uid||c.other)}</div></div><div class="profileActions"><button id="writeFromProfile">💬<span>Xabar</span></button><button id="muteFromProfile">🔕<span>Sukut qilish</span></button><button id="callInfo">☎<span>Chaqiruv</span></button><button id="videoInfo">▣<span>Video</span></button></div><div class="profileCard"><div class="profileValue">@${esc(p.username||'')}</div><div class="sub">Foydalanuvchi nomi</div><div class="profileValue">${esc(p.bio||'Tarjimai hol kiritilmagan')}</div><div class="sub">Tarjimai hol</div></div></div>`);$('x').onclick=closeModal;$('writeFromProfile').onclick=closeModal;return}
+const col=c.type==='group'?'groups':'channels',d=(await getDoc(doc(db,col,c.id))).data()||{},can=d.ownerId===user.uid||d.admins?.includes(user.uid),members=c.type==='group'?(d.memberIds||[]):(d.subscriberIds||[]);showModal(`<div class="profilePage"><div class="profileHero"><button class="iconbtn" id="x">‹</button><div class="avatar profileAvatar">${initials(d.name||c.title)}</div><h2>${esc(d.name||c.title)}</h2><div class="profileOnline">${c.type==='group'?'Guruh':'Kanal'}</div><div class="profileId">${members.length} ${c.type==='group'?'a’zo':'obunachi'}</div></div><div class="profileCard"><div class="profileValue">@${esc(d.username||'')}</div><div class="sub">Username</div><div class="profileValue">${esc(d.description||'Tavsif kiritilmagan')}</div><div class="sub">Tavsif</div></div>${can?`<div class="actions"><button class="solid" id="addMemberBtn">＋ A’zo qo‘shish</button><button id="editRoomBtn">✎ Tahrirlash</button></div>`:''}<div class="sub" style="margin-top:12px">${c.type==='group'?'Guruh a’zolari':'Kanal obunachilari'}: ${members.length}</div></div>`);$('x').onclick=closeModal;if(can){$('addMemberBtn').onclick=()=>addRoomMember(c);$('editRoomBtn').onclick=()=>editRoomModal(c,d,col)}}
+
+async function addRoomMember(c){
+  const title=c.type==='group'?'Guruhga a’zo qo‘shish':'Kanalga obunachi qo‘shish';
+  showModal(`<h2>${title}</h2><div class="field"><label>Username orqali qidirish</label><input id="memberUser" placeholder="@username" autocomplete="off"></div><div id="memberFound" class="empty">Username yozing — foydalanuvchi shu yerda chiqadi.</div><div id="memberErr" class="error"></div><div class="actions"><button id="memberCancel">Yopish</button></div>`);
+  $('memberCancel').onclick=closeModal;
+  const input=$('memberUser'),found=$('memberFound');let timer=null;
+  async function findMember(){
+    const un=normalizeUsername(input.value);
+    if(!un){found.className='empty';found.textContent='Username yozing — foydalanuvchi shu yerda chiqadi.';return}
+    if(!validUsername(un)){found.className='empty';found.textContent='Username 3–32 belgidan iborat bo‘lsin.';return}
+    found.className='empty';found.textContent='Qidirilmoqda...';
+    try{
+      const result=await resolveUsername(un);
+      if(!result||result.kind!=='user'){found.textContent='Bunday foydalanuvchi username topilmadi.';return}
+      const uid=result.uid;
+      if(uid===user.uid){found.textContent='O‘zingizni qo‘sha olmaysiz.';return}
+      const p=result.profile||{};
+      const col=c.type==='group'?'groups':'channels',field=c.type==='group'?'memberIds':'subscriberIds';
+      const roomSnap=await getDoc(doc(db,col,c.id));
+      if(!roomSnap.exists()){found.textContent='Guruh yoki kanal topilmadi.';return}
+      const room=roomSnap.data()||{},already=(room[field]||[]).includes(uid);
+      found.className='';
+      found.innerHTML=`<div class="item" style="padding:10px 0;cursor:default"><div class="avatar">${initials(p.name||un)}</div><div class="meta"><div class="name">${esc(p.name||'Foydalanuvchi')}</div><div class="sub">@${esc(normalizeUsername(p.username)||un)}</div></div><button class="send" id="addFoundUser" ${already?'disabled':''}>${already?'Qo‘shilgan':'Qo‘shish'}</button></div>`;
+      $('addFoundUser').onclick=async()=>{
+        const btn=$('addFoundUser'),err=$('memberErr');btn.disabled=true;btn.textContent='Qo‘shilmoqda...';err.textContent='';
+        try{
+          const ref=doc(db,col,c.id);
+          await runTransaction(db,async tx=>{
+            const snap=await tx.get(ref);
+            if(!snap.exists())throw new Error('Guruh yoki kanal topilmadi.');
+            const data=snap.data()||{},old=Array.isArray(data[field])?data[field]:[];
+            if(old.includes(uid))return;
+            tx.update(ref,{[field]:[...old,uid],updatedAt:serverTimestamp()});
+          });
+          btn.textContent='Qo‘shildi ✓';toast(`@${un} qo‘shildi`);
+        }catch(e){btn.disabled=false;btn.textContent='Qo‘shish';err.textContent='Qo‘shib bo‘lmadi: '+(e?.message||e)}
+      };
+    }catch(e){found.className='empty';found.textContent='Qidirishda xatolik: '+(e?.message||e)}
+  }
+  input.oninput=()=>{clearTimeout(timer);timer=setTimeout(findMember,250)};
+  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();clearTimeout(timer);findMember()}};
+  input.focus();
+}
+
+function editRoomModal(c,d,col){
+  showModal(`<h2>${c.type==='group'?'Guruhni':'Kanalni'} tahrirlash</h2><div class="field"><label>Nomi</label><input id="editRoomName" value="${esc(d.name||'')}"></div><div class="field"><label>Username</label><input id="editRoomUser" value="${esc(d.username||'')}"></div><div class="field"><label>Tavsif</label><textarea id="editRoomDesc" rows="3">${esc(d.description||'')}</textarea></div><div class="actions"><button id="editCancel">Bekor qilish</button><button class="solid" id="editSave">Saqlash</button></div><div id="editErr" class="error"></div>`);
+  $('editCancel').onclick=closeModal;
+  $('editSave').onclick=async()=>{
+    const name=$('editRoomName').value.trim(),username=normalizeUsername($('editRoomUser').value),description=$('editRoomDesc').value.trim(),err=$('editErr'),btn=$('editSave'),oldUsername=normalizeUsername(d.username);
+    if(!name){err.textContent='Nom kiriting.';return}
+    if(username&&!validUsername(username)){err.textContent='Username 3–32 belgidan iborat bo‘lsin.';return}
+    btn.disabled=true;btn.textContent='Saqlanmoqda...';
+    try{
+      const roomRef=doc(db,col,c.id),newIndex=username?doc(db,'usernames',username):null,oldIndex=oldUsername?doc(db,'usernames',oldUsername):null;
+      await runTransaction(db,async tx=>{
+        if(newIndex){
+          const existing=await tx.get(newIndex);
+          if(existing.exists()&&existing.data()?.uid!==c.id)throw new Error('Bu username band. Boshqa username tanlang.');
+        }
+        tx.update(roomRef,{name,username,description,updatedAt:serverTimestamp()});
+        if(username)tx.set(newIndex,{uid:c.id,type:'channel',roomType:c.type,username});
+        if(oldUsername&&oldUsername!==username)tx.delete(oldIndex);
+      });
+      c.title=name;c.subtitle=description;closeModal();renderApp();toast('Ma’lumotlar saqlandi');
+    }catch(e){err.textContent=e?.message||String(e)}finally{btn.disabled=false;btn.textContent='Saqlash'}
+  };
+}
+
+async function boot(){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);if(localStorage.getItem('mxxDark')==='true')document.body.classList.add('dark');onAuthStateChanged(auth,async u=>{try{user=u;if(!u){stopUnreadPolling();profile=null;current=null;hideLoading();authScreen();return}profile=await loadProfile(u);hideLoading();renderApp()}catch(e){hideLoading();$("app").innerHTML=`<div class="auth"><h2>Profil yuklanmadi</h2><p class="error">${esc(e.message)}</p><button class="primary" onclick="location.reload()">Qayta urinish</button></div>`}})}catch(e){hideLoading();$("app").innerHTML=`<div class="auth"><h2>Xatolik</h2><p class="error">${esc(e.message)}</p></div>`}}boot();
+</script></body></html>
